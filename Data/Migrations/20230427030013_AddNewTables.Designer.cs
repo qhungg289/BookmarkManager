@@ -4,6 +4,7 @@ using BookmarkManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookmarkManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230427030013_AddNewTables")]
+    partial class AddNewTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,13 +101,13 @@ namespace BookmarkManager.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FolderId")
+                    b.Property<int>("FolderId")
                         .HasColumnType("int");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)");
 
@@ -117,8 +120,6 @@ namespace BookmarkManager.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FolderId");
 
                     b.HasIndex("UserId");
 
@@ -152,38 +153,6 @@ namespace BookmarkManager.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Folders");
-                });
-
-            modelBuilder.Entity("BookmarkManager.Models.Tag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tag");
-                });
-
-            modelBuilder.Entity("BookmarkTag", b =>
-                {
-                    b.Property<int>("BookmarksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookmarksId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("BookmarkTag");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -325,17 +294,11 @@ namespace BookmarkManager.Data.Migrations
 
             modelBuilder.Entity("BookmarkManager.Models.Bookmark", b =>
                 {
-                    b.HasOne("BookmarkManager.Models.Folder", "Folder")
-                        .WithMany("Bookmarks")
-                        .HasForeignKey("FolderId");
-
                     b.HasOne("BookmarkManager.Models.ApplicationUser", "User")
                         .WithMany("Bookmarks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Folder");
 
                     b.Navigation("User");
                 });
@@ -349,21 +312,6 @@ namespace BookmarkManager.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BookmarkTag", b =>
-                {
-                    b.HasOne("BookmarkManager.Models.Bookmark", null)
-                        .WithMany()
-                        .HasForeignKey("BookmarksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookmarkManager.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -422,11 +370,6 @@ namespace BookmarkManager.Data.Migrations
                     b.Navigation("Bookmarks");
 
                     b.Navigation("Folders");
-                });
-
-            modelBuilder.Entity("BookmarkManager.Models.Folder", b =>
-                {
-                    b.Navigation("Bookmarks");
                 });
 #pragma warning restore 612, 618
         }
