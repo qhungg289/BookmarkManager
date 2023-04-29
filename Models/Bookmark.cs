@@ -14,10 +14,15 @@ namespace BookmarkManager.Models
         [Required]
         [Column(TypeName = "nvarchar(255)")]
         public string Name { get; set; } = string.Empty;
+
         public string? Description { get; set; }
-        public string? Image { get; set; }
+
+        public string? Icon { get; set; }
+
         public int? FolderId { get; set; }
+
         public Folder? Folder { get; set; } = null!;
+
         public string UserId { get; set; } = string.Empty;
 
         public ApplicationUser User { get; set; } = null!;
